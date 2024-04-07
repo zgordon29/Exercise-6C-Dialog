@@ -9,12 +9,21 @@ public class BasicInkExample : MonoBehaviour {
 	
     void Awake () {
 		// Remove the default message
-		RemoveChildren();
-		StartStory();
+		//RemoveChildren();
+		//StartStory();
 	}
 
+	public void StartCharacterDialog(TextAsset characterDialog)
+	{
+		RemoveChildren();
+
+		story = new Story(characterDialog.text);
+        if (OnCreateStory != null) OnCreateStory(story);
+        RefreshView();
+    }
+
 	// Creates a new Story object with the compiled story which we can then play!
-	void StartStory () {
+	public void StartStory () {
 		story = new Story (inkJSONAsset.text);
         if(OnCreateStory != null) OnCreateStory(story);
 		RefreshView();
@@ -50,9 +59,11 @@ public class BasicInkExample : MonoBehaviour {
 		}
 		// If we've read all the content and there's no choices, the story is finished!
 		else {
-			Button choice = CreateChoiceView("End of story.\nRestart?");
+			
+			
+			Button choice = CreateChoiceView("Done");
 			choice.onClick.AddListener(delegate{
-				StartStory();
+				RemoveChildren();
 			});
 		}
 	}
